@@ -24,7 +24,7 @@ export function initSocket(server){
 
     io=new Server(server,{
         cors:{
-            origin:[process.env.FRONTEND_URL,"http://localhost:5174"],
+            origin:[process.env.FRONTEND_URL,"http://localhost:5174","https://lets-connect-iru9.onrender.com"],
             methods: ["GET", "POST"],
       credentials: true,
         },
