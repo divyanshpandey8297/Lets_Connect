@@ -20,11 +20,24 @@ let io;
 
 export function initSocket(server){
 
+
+    //add at the testing side
+
+
+
+
+    // io=new Server(server,{
+    //     cors:{
+    //         origin:[process.env.FRONTEND_URL,"http://localhost:5174","https://lets-connect-iru9.onrender.com"],
+    //         methods: ["GET", "POST"],
+    //   credentials: true,
+    //     },
+    // });
     //give the server corns
 
     io=new Server(server,{
         cors:{
-            origin:[process.env.FRONTEND_URL,"http://localhost:5174","https://lets-connect-iru9.onrender.com"],
+            origin:["https://chipper-entremet-b5df3d.netlify.app","http://localhost:5174","https://lets-connect-iru9.onrender.com"],
             methods: ["GET", "POST"],
       credentials: true,
         },
