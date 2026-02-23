@@ -17,7 +17,9 @@ export const generateJwtToken=async(user,message,statusCode,res)=>{
 
     })
 
-    console.log("enter into the jwtToken",token);
+    // console.log("enter into the jwtToken",token);
+
+      user.password = undefined;
 
     return res.status(statusCode).cookie("token",token,
         {
@@ -34,7 +36,8 @@ export const generateJwtToken=async(user,message,statusCode,res)=>{
     ).json({
         success:true,
         message,
-        token
+        token,
+        user
 
         
     })

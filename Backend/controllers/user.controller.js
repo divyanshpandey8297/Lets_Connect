@@ -1,24 +1,80 @@
-// import { catchAsyncError } from "../middleware/catchAsyncError.middleware";
-// import { generateJwtToken } from "../utils/jwtToken";
-// const bcrypt=require("bcryptjs")
-// const User=require("../models/user")
-// const generateJwtToken=require("../utils/jwtToken")
-// const catchAsyncError=require("../middleware/catchAsyncError.middleware")
+
 import {User} from '../models/user.js'
 import bcrypt from "bcryptjs"
 import { v2 as cloudinary } from 'cloudinary';
 
 import { catchAsyncError } from "../middleware/catchAsyncError.middleware.js";
 import { generateJwtToken } from '../utils/jwtToken.js';
+import { Otp } from '../models/Otp.model.js';
+import { mailsender } from '../utils/mailsender.js';
+import otpGenerator from 'otp-generator'
+
+
+
+
+export const sendOtp=async (req,res)=>{
+    try{
+        const {email}=req.body;
+
+        const checkUserPresent=await User.findOne({email});
+        if(checkUserPresent){
+            return res.status(403).json({
+                success:false,
+                message:"user is already found"
+            })
+        }
+        var otp=otpGenerator.generate(6,{
+        upperCaseAlphabets:false,
+        lowerCaseAlphabets:false,
+        specialChars:false,
+    });
+    // console.log("OTP generated :", otp);
+
+
+     const otpPayload={email,otp};
+
+     const otpBody=await Otp.create(otpPayload);
+
+    //   console.log(otpBody);
+
+
+      const emailResponse = await mailsender(
+        email,
+        "OTP for Let's connect",
+        `<h1>Your OTP for let's Connect Registration</h1>
+        <p>Your OTP is: <strong>${otp}</strong></p>
+        <p>This OTP will expire in 5 minutes.</p>
+        <p>If you didn't request this OTP, please ignore this email.</p>`
+    );
+
+    // console.log("Email sent successfully:", emailResponse);
+
+    //return the response successful
+    res.status(200).json({
+        success:true,
+        message:"OTP sent successfully",
+        otp,
+    });
+        
+
+
+
+    }catch(error){
+        return res.status(500).json({
+            success:false,
+            message:error.message,
+        })
+    }
+}
 
 
 export const signup=catchAsyncError(async (req, res, next ) => {
-    const {fullName,email,password,confirmPassword}=req.body
+    const {firstName,lastName,email,password,confirmPassword,otp }=req.body
 
-    if(!fullName ||!email ||!password ||!confirmPassword   ){
+    if(!firstName ||!lastName || !email ||!password ||!confirmPassword ||!otp ){
         return res.status(400).json({
             success:false,
-            message:"please Provide all the field"
+            message:"please fill all the field"
         })
     }
 
@@ -40,15 +96,15 @@ export const signup=catchAsyncError(async (req, res, next ) => {
         })
     }
 
-    if(password.length < 8){
-        return res.status(400).json({
-            success:false,
-            message:"Password Must be at least 8 character long",
-        })
-    }
+    // if(password.length < 8){
+    //     return res.status(400).json({
+    //         success:false,
+    //         message:"Password Must be at least 8 character long",
+    //     })
+    // }
 
     const isEmailAlreadyUsed=await User.findOne({email});
-    console.log("isEmailAlreadyUsed",isEmailAlreadyUsed)
+    // console.log("isEmailAlreadyUsed",isEmailAlreadyUsed)
 
     if(isEmailAlreadyUsed){
         return res.status(400).json({
@@ -56,19 +112,38 @@ export const signup=catchAsyncError(async (req, res, next ) => {
             message:"User is already found"
         })
     }
+     const recentOtp=await Otp.find({email}).sort({createdAt:-1}).limit(1);
+        console.log(recentOtp);
+    
+
+        if(recentOtp.length==0){
+            return res.status(400).json({
+                success:false,
+                message:"Otp Not Found"
+            })
+        }
+        else if(String(otp).trim() !== String(recentOtp[0].otp).trim()){
+            console.log("OTP Mismatch - Received:", otp, "Expected:", recentOtp[0].otp);
+            return res.status(400).json({
+                success:false,
+                message:"Invalid OTP"
+            })
+        }
+        // const surname="pandey"
 
 
-
+        const image=`https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`
 
     const passwordHashed=await bcrypt.hash(password, 10)
 
     const user=await User.create({
-        fullName,
+        firstName,
+        lastName,
         email,
         password:passwordHashed,
         avatar:{
-            public_id:"",
-            url:"",
+            public_id:image,
+            url:image,
         }
     })
     console.log("enter into the token information code");
@@ -106,12 +181,12 @@ export const signin=catchAsyncError(async (req, res, next ) => {
         })
     }
 
-    if(password.length < 8){
-        return res.status(400).json({
-            success:false,
-            message:"Password Must be at least 8 character long",
-        })
-    }
+    // if(password.length < 8){
+    //     return res.status(400).json({
+    //         success:false,
+    //         message:"Password Must be at least 8 character long",
+    //     })
+    // }
     console.log("before the userController")
 
     const userExit=await User.findOne({email});
@@ -157,7 +232,7 @@ export const signout=catchAsyncError(async (req, res, next ) => {
 
         })
         .json({
-            suceess:true,
+            success:true,
             message:"User Logged Out Successfully",
         })
         
@@ -172,25 +247,25 @@ export const getUser=catchAsyncError(async (req, res, next ) => {
 
 const user=await User.findById(req.user._id);
 res.status(200).json({
-    suceess:true,
+    success:true,
     user,
 })
 
 
 });
 export const updateProfile=catchAsyncError(async (req, res, next ) => {
-    const {fullName,email}=req.body;
+    const {firstName,lastName,email}=req.body;
 
-    if(fullName?.length ===0 || email?.length==0){
+    if(firstName?.length ===0 || email?.length==0){
         return res.status(400).json({
             succes:false,
-            message:"fullName Or Email Can't Be empty"
+            message:"FirstName Or Email Can't Be empty"
         })
     }
     const avatar=req?.files?.avatar;
     let cloudinaryResponse={};
     const data={
-        fullName:fullName?.trim(),
+        firstName:firstName?.trim(),
         email:email?.trim(),
         
 

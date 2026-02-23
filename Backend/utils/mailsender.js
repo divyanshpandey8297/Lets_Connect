@@ -1,11 +1,16 @@
-const nodemailer=require("nodemailer")
-require("dotenv").config();
+// const nodemailer=require("nodemailer")
+// require("dotenv").config();
+import nodemailer from "nodemailer"
+import dotenv from "dotenv";
+dotenv.config();
 
-const mailsender=async(email ,title,body)=>{
+export const  mailsender=async(email ,title,body)=>{
     try{
 
         const transporter=nodemailer.createTransport({
             host:process.env.MAIL_HOST,
+            port: 587, // or 465
+            secure: false, // true for 465, false for 587
             auth:{
                 user:process.env.MAIL_USER,
                 pass:process.env.MAIL_PASS,
@@ -13,13 +18,13 @@ const mailsender=async(email ,title,body)=>{
 
         })
 
-        let info =transporter.sendMail({
+        let info =await transporter.sendMail({
             from:`letConnect || lectConnect by- Divyansh`,
             to:`${email}`,
             subject:`${title}`,
             html:`${body}`
         })
-        console.log(info);
+        // console.log(info);
         return info
 
 
@@ -29,4 +34,4 @@ const mailsender=async(email ,title,body)=>{
         }
     }
     
-module.exports=mailsender;
+// module.exports=mailsender;

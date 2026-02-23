@@ -3,12 +3,17 @@ import mongoose from "mongoose";
 
 
 
+
 const userSchema=new mongoose.Schema({
 
-    fullName:{
+    firstName:{
         type:String,
         trim:true,
         required:true
+    },
+    lastName:{
+        type:String,
+        required:true,
     },
     email:{
         type:String,
@@ -23,6 +28,20 @@ const userSchema=new mongoose.Schema({
         url:String
         // required:true
     },
+    
+
+
+    //connection is needed to make sure the user is when online and when offline
+    
+    lastSeen:{
+        type:Date,
+        default:null
+    },
+
+  isOnline: {
+    type: Boolean,
+    default: false,
+  },
 
     
 },

@@ -41,7 +41,7 @@ dotenv.config({ path: "./config/.env" });
 app.use(
     cors(
         {
-    origin:[process.env.FRONTEND_URL],
+    origin:[process.env.FRONTEND_URL,"http://localhost:5174"],
     credentials:true,
     methods:["GET","POST","PUT","DELETE"]
 }
@@ -67,7 +67,7 @@ app.use(
 
 // const userRouter=require("../Backend/routes/user.route")
 // const userRoutes=require("./routes/user.route")
-app.use("/api/v1/auth",userRoutes);
+app.use("/api/v1/user",userRoutes);
 app.use("/api/v1/message",messageRoutes);
 
 // const {cloudinaryConnect}=require("./config/cloudinary");

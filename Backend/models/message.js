@@ -1,4 +1,5 @@
-const { default: mongoose } = require("mongoose");
+// const { default: mongoose } = require("mongoose");
+import mongoose from "mongoose";
 
 
 
@@ -8,7 +9,7 @@ const messageSchema=new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
     },
-    recieverId:{
+    receiverId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
     },
@@ -17,6 +18,12 @@ const messageSchema=new mongoose.Schema({
 
     text:String,
     media:String,
+    
+    isSeen:{
+        type:Boolean,
+        default:false,
+
+    },
 
    
 
