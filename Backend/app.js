@@ -41,7 +41,7 @@ dotenv.config({ path: "./config/.env" });
 app.use(
     cors(
         {
-    origin:[process.env.FRONTEND_URL,"http://localhost:5174"],
+    origin:[process.env.FRONTEND_URL,"http://localhost:5174","https://lets-connect-iru9.onrender.com"],
     credentials:true,
     methods:["GET","POST","PUT","DELETE"]
 }
