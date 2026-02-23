@@ -3,9 +3,10 @@ import { io } from "socket.io-client";
 
 let socket = null;
 
-// Backend URL: use env in build, or fallback to Render (same as axios)
-const SOCKET_URL =
-  import.meta.env.VITE_API_URL || "https://lets-connect-iru9.onrender.com";
+const RENDER_API = "https://lets-connect-iru9.onrender.com";
+const SOCKET_URL = import.meta.env.DEV
+  ? (import.meta.env.VITE_API_URL || "http://localhost:4200")
+  : RENDER_API;
 
 export const connectSocket = (userId) => {
   socket = io(SOCKET_URL, {
