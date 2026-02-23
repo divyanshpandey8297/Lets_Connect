@@ -3,23 +3,32 @@ import { io } from "socket.io-client";
 
 let socket=null;
 
-export const connectSocket=(userId)=>{
-    socket=io(import.meta.env.MODE === "development" ? "http://localhost:4200":"/",{
-        query:{userId},
-    });
-
-    // socket.on("typing", ({ senderId }) => {
-    //     // console.log("User is typing:", senderId);
-    // });
-
-    // socket.on("stopTyping", ({ senderId }) => {
-    //     console.log("User stopped typing:", receiverId);
-    // });
+const SOCKET_URL = import.meta.env.VITE_API_URL;
 
 
-    return socket;
+// export const connectSocket=(userId)=>{
+//     socket=io(import.meta.env.MODE === "development" ? "http://localhost:4200":"/",{
+//         query:{userId},
+//     });
+
+
+//     return socket;
+// };
+
+
+export const connectSocket = (userId) => {
+  if (!SOCKET_URL) {
+    console.error("VITE_API_URL is not defined");
+    return null;
+  }
+
+  socket = io(SOCKET_URL, {
+    query: { userId },
+    withCredentials: true,
+  });
+
+  return socket;
 };
-
 
 
 
