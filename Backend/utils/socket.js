@@ -37,7 +37,7 @@ export function initSocket(server){
 
     io=new Server(server,{
         cors:{
-            origin:["https://chipper-entremet-b5df3d.netlify.app","http://localhost:5174","https://lets-connect-iru9.onrender.com"],
+            origin:["https://chipper-entremet-b5df3d.netlify.app","http://localhost:5174","https://lets-connect-orcin.vercel.app"],
             methods: ["GET", "POST"],
       credentials: true,
         },
