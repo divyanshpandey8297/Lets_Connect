@@ -24,13 +24,21 @@
 //   withCredentials: true,
 // });
 
+// import axios from "axios";
+
+// // 🔍 Debug (remove after it works)
+// console.log("MODE:", import.meta.env.MODE);
+// console.log("API URL:", import.meta.env.VITE_API_URL);
+
+// export const axiosInstance = axios.create({
+//   baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
+//   withCredentials: true,
+// });
+
+
 import axios from "axios";
 
-// 🔍 Debug (remove after it works)
-console.log("MODE:", import.meta.env.MODE);
-console.log("API URL:", import.meta.env.VITE_API_URL);
-
 export const axiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
+  baseURL: "https://lets-connect-iru9.onrender.com/api/v1",
   withCredentials: true,
 });
