@@ -3,7 +3,9 @@ import { io } from "socket.io-client";
 
 let socket=null;
 
-const SOCKET_URL = import.meta.env.VITE_API_URL;
+// const SOCKET_URL = import.meta.env.VITE_API_URL;
+
+const SOCKET_URL ="https://lets-connect-iru9.onrender.com";
 
 
 // export const connectSocket=(userId)=>{
