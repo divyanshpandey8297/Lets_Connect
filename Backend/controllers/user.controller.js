@@ -223,19 +223,32 @@ export const signin=catchAsyncError(async (req, res, next ) => {
 
 export const signout=catchAsyncError(async (req, res, next ) => {
     // const {token}=req.user.id;
-    res.status(200)
-        .cookie("token","",{
-            maxAge:0, //0-ms
-            httpOnly:true,
-            sameSite:"strict",
-            secure:process.env.NODE_ENV !== "development" ? true:false,
+    // res.status(200)
+    //     .cookie("token","",{
+    //         maxAge:0, //0-ms
+    //         httpOnly:true,
+    //         sameSite:"strict",
+    //         secure:process.env.NODE_ENV !== "development" ? true:false,
 
-        })
-        .json({
-            success:true,
-            message:"User Logged Out Successfully",
-        })
+    //     })
+    //     .json({
+    //         success:true,
+    //         message:"User Logged Out Successfully",
+    //     })
         
+    res
+    .status(200)
+    .cookie("token", "", {
+      maxAge: 0,
+      httpOnly: true,
+      sameSite: "none", // match login
+      secure: true,     // match login (Render is HTTPS)
+      path: "/",        // explicit, same as default
+    })
+    .json({
+      success: true,
+      message: "User Logged Out Successfully",
+    });
 
 
 
