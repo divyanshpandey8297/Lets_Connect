@@ -127,10 +127,15 @@ const App = () => {
       <Navbar />
 
       <Routes>
-        <Route
+        {/* <Route
           path="/"
           element={authUser ? <Home /> : <Navigate to="/login" />}
-        />
+        /> */}
+
+<Route
+  path="/"
+  element={authUser ? <Home /> : <Login />}
+/>
 
         
           <Route
@@ -144,10 +149,16 @@ const App = () => {
           element={!authUser ? <Register /> : <Navigate to="/" />}
         />
 
-        <Route
+        {/* <Route
           path="/login"
           element={!authUser ? <Login /> : <Navigate to="/" />}
-        />
+        /> */}
+
+<Route
+  path="/login"
+  element={<Navigate to="/" />}
+/>
+
 
         <Route
           path="/profile"
