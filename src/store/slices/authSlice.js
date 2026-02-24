@@ -27,6 +27,7 @@ export const logout = createAsyncThunk("/user/sign-out", async (_, thunkAPI) => 
     await axiosInstance.get("/user/sign-out");
 
     disconnectSocket();
+    localStorage.clear();
     return null;
   } catch (error) {
     toast.error(error.response?.data.message);
