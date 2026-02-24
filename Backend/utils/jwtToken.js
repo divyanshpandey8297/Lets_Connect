@@ -29,8 +29,9 @@ export const generateJwtToken=async(user,message,statusCode,res)=>{
 
           //help to prevent xss
 
-        sameSite:"strict",
-        secure:process.env.NODE_ENV !== "development"? true:false
+          sameSite: "none", 
+          secure: true,        
+        
         
         }
     ).json({
@@ -42,3 +43,8 @@ export const generateJwtToken=async(user,message,statusCode,res)=>{
         
     })
 };
+
+
+
+//chhange the code iof the sameSite:"strict",for the other side of visit 
+//also chnage the secure:process.env.NODE_ENV !== "development"? true:false

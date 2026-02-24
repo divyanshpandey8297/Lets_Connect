@@ -38,14 +38,13 @@
 
 import axios from "axios";
 
-const RENDER_API = "https://lets-connect-iru9.onrender.com";
+// Backend API: use env in build, or fallback to Render so requests never hit Vercel
 const apiBase =
-  import.meta.env.DEV
-    ? (import.meta.env.VITE_API_URL || "http://localhost:4200")
-    : RENDER_API;
+  import.meta.env.VITE_API_URL ||
+  "https://lets-connect-iru9.onrender.com";
 
 export const axiosInstance = axios.create({
-  baseURL: `${apiBase}/api/v1`,
+  baseURL: `${import.meta.env.VITE_API_URL}/api/v1`,
   withCredentials: true,
 });
 
