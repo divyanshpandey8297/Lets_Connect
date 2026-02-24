@@ -35,15 +35,10 @@ import { User } from "../models/user.js";
 export const isAuthenticated = catchAsyncError(async (req, res, next) => {
   let token = null;
 
-  // 1) Prefer Authorization: Bearer <token>
+  // Read JWT only from Authorization header (frontend on Vercel uses this)
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer ")) {
     token = authHeader.split(" ")[1];
-  }
-
-  // 2) Fallback to cookie (for local dev / same-site)
-  if (!token && req.cookies?.token) {
-    token = req.cookies.token;
   }
 
   if (!token) {
